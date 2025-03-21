@@ -17,7 +17,7 @@ export async function generateStaticParams() {
 
 export default function BlogPostPage({ params }: Props) {
   const { slug } = params;
-  const filePath = path.join("posts", `${slug}.md`);
+  const filePath = path.join(process.cwd(), "posts", `${slug}.md`);
   const fileContent = fs.readFileSync(filePath, "utf8");
   const { data, content } = matter(fileContent);
   const processedContent = remark().use(html).processSync(content);
