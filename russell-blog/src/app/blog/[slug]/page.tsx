@@ -4,13 +4,23 @@ import matter from "gray-matter";
 import { remark } from "remark";
 import html from "remark-html";
 
-export default async function BlogPostPage(props: any) {
-  const { slug } = await Promise.resolve(props.params);
+type Props = {
+  params: { slug: string };
+};
 
+export async function generateStaticParams() {
+  const files = fs.readdirSync("posts");
+  return files.map((file) => ({
+    slug: file.replace(/\.md$/, ""),
+  }));
+}
+
+export default function BlogPostPage({ params }: Props) {
+  const { slug } = params;
   const filePath = path.join("posts", `${slug}.md`);
   const fileContent = fs.readFileSync(filePath, "utf8");
   const { data, content } = matter(fileContent);
-  const processedContent = await remark().use(html).process(content);
+  const processedContent = remark().use(html).processSync(content); // Sync processing
   const contentHtml = processedContent.toString();
 
   return (
@@ -20,12 +30,4 @@ export default async function BlogPostPage(props: any) {
       <div dangerouslySetInnerHTML={{ __html: contentHtml }} />
     </main>
   );
-}
-
-export async function generateStaticParams() {
-  const files = fs.readdirSync("posts");
-
-  return files.map((file) => ({
-    slug: file.replace(/\.md$/, ""),
-  }));
 }
