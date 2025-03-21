@@ -20,7 +20,7 @@ export default function BlogPostPage({ params }: Props) {
   const filePath = path.join("posts", `${slug}.md`);
   const fileContent = fs.readFileSync(filePath, "utf8");
   const { data, content } = matter(fileContent);
-  const processedContent = remark().use(html).processSync(content); // Sync processing
+  const processedContent = remark().use(html).processSync(content);
   const contentHtml = processedContent.toString();
 
   return (
