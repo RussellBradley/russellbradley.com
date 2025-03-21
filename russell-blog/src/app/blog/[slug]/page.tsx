@@ -4,12 +4,15 @@ import matter from "gray-matter";
 import { remark } from "remark";
 import html from "remark-html";
 
-export default async function BlogPostPage({ params }: any) {
-  const { slug } = await Promise.resolve(params);
+export default async function BlogPostPage({
+  params,
+}: {
+  params: Awaited<{ slug: string }>;
+}) {
+  const { slug } = params;
   const filePath = path.join("posts", `${slug}.md`);
   const fileContent = fs.readFileSync(filePath, "utf8");
   const { data, content } = matter(fileContent);
-
   const processedContent = await remark().use(html).process(content);
   const contentHtml = processedContent.toString();
 
