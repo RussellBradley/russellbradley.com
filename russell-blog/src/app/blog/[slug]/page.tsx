@@ -4,8 +4,9 @@ import matter from "gray-matter";
 import { remark } from "remark";
 import html from "remark-html";
 
-export default async function BlogPostPage({ params }: { params: { slug: string } }) {
-  const filePath = path.join("posts", `${params.slug}.md`);
+export default async function BlogPostPage({ params }: any) {
+  const { slug } = await Promise.resolve(params);
+  const filePath = path.join("posts", `${slug}.md`);
   const fileContent = fs.readFileSync(filePath, "utf8");
   const { data, content } = matter(fileContent);
 
